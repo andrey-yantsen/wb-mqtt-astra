@@ -1,0 +1,3 @@
+#!/bin/sh
+
+update-rc.d wb-mqtt-astra defaults
