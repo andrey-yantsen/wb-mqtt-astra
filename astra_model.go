@@ -12,7 +12,7 @@ import (
 type AstraModel struct {
 	wbgo.ModelBase
 	astra     *astra_l.Driver
-	devices   map[uint16]AstraDevice
+	devices   map[uint16]*AstraDevice
 	addresses multipleAddress
 	started   bool
 	mutex     *sync.Mutex
@@ -34,10 +34,11 @@ func (a *AstraModel) Start() error {
 		panic("Model is already started")
 	}
 	a.started = true
+	a.devices = make(map[uint16]*AstraDevice)
 	for _, address := range a.addresses {
 		devName := fmt.Sprintf("astra_%d", address)
 
-		ad := AstraDevice{
+		ad := &AstraDevice{
 			DeviceBase: wbgo.DeviceBase{
 				DevName: devName,
 			},
@@ -54,7 +55,7 @@ func (a *AstraModel) Start() error {
 			ad.DevTitle = f.DeviceType.Name
 		}
 
-		a.Observer.OnNewDevice(&ad)
+		a.Observer.OnNewDevice(ad)
 		ad.Publish()
 	}
 	return nil

@@ -12,7 +12,6 @@ const driverClientId = "astra"
 
 func startDaemon(astra *astra_l.Driver, addresses multipleAddress, brokerAddress string) {
 	model := &AstraModel{
-		devices:   make(map[uint16]AstraDevice),
 		astra:     astra,
 		addresses: addresses,
 		mutex:     &sync.Mutex{},
