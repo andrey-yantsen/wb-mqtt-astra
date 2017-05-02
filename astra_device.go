@@ -73,7 +73,6 @@ func (a *AstraDevice) AcceptOnValue(name, value string) bool {
 				}
 			}
 		}()
-		return true
 	case "delete":
 		a.model.lock()
 		go func() {
@@ -86,7 +85,6 @@ func (a *AstraDevice) AcceptOnValue(name, value string) bool {
 				a.modelObserver.RemoveDevice(a)
 			}
 		}()
-		return true
 	case "register_l2":
 		a.model.lock()
 		go func() {
@@ -98,7 +96,6 @@ func (a *AstraDevice) AcceptOnValue(name, value string) bool {
 				a.ensureSensor(*s)
 			}
 		}()
-		return true
 	case "delete_l2_all":
 		a.model.lock()
 		go func() {
@@ -112,7 +109,6 @@ func (a *AstraDevice) AcceptOnValue(name, value string) bool {
 				}
 			}
 		}()
-		return true
 	case "l2_channel":
 		a.model.lock()
 		go func() {
@@ -139,7 +135,26 @@ func (a *AstraDevice) AcceptOnValue(name, value string) bool {
 				}
 			}
 		}()
-		return false
+	case "new_radio_mode":
+		a.model.lock()
+		go func() {
+			defer a.model.unlock()
+			defer func() {
+				if cfg, err := a.device.GetNetLevel2Config(); err != nil {
+					wbgo.Error.Println("Got error while checking net config", err)
+				} else {
+					wbgo.Info.Println("Radimode set to", cfg.RfType)
+					a.Observer.OnValue(a, "new_radio_mode", strconv.Itoa(int(cfg.RfType)))
+				}
+			}()
+			mode := astra_l.RadioModeOld
+			if value == "1" {
+				mode = astra_l.RadioModeNew
+			}
+			if err := a.device.SetRadioMode(mode); err != nil {
+				wbgo.Error.Println("Got error while setting radio mode", err)
+			}
+		}()
 	}
 	return false
 }
@@ -192,10 +207,11 @@ func (a *AstraDevice) Poll() {
 }
 
 var sharedSwitches = map[string]string{
-	"register":      "Register new Astra-RI-M",
-	"delete":        "Deregister Astra-RI-M",
-	"register_l2":   "Register new Level2 detector",
-	"delete_l2_all": "Deregister all Level2 detectors",
+	"register":       "Register new Astra-RI-M",
+	"delete":         "Deregister Astra-RI-M",
+	"register_l2":    "Register new Level2 detector",
+	"delete_l2_all":  "Deregister all Level2 detectors",
+	"new_radio_mode": "Use new radio mode",
 }
 
 var sharedAlarms = map[string]string{
@@ -254,6 +270,7 @@ func (a *AstraDevice) initExistsDevice() {
 	}
 
 	a.Observer.OnValue(a, "l2_channel", strconv.Itoa(int(n.ChannelNo)))
+	a.Observer.OnValue(a, "new_radio_mode", strconv.Itoa(int(n.RfType)))
 
 	a.exists = true
 }
