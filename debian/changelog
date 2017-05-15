@@ -1,3 +1,11 @@
+wb-mqtt-astra (0.3.1.1) wheezy; urgency=low
+
+  * add packagecloud.io description
+  * [debian] restart daemon after upgrade
+  * [makefile] add release target, to simplify releases
+
+ -- Andrey Yantsen <andrey@janzen.su>  Mon, 15 May 2017 19:48:07 +0300
+
 wb-mqtt-astra (0.3.1) wheezy; urgency=low
 
   * Add '%' as units for Smoke & Power attributes
