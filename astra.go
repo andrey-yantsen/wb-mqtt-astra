@@ -7,6 +7,7 @@ import (
 	"time"
 
 	astra_l "github.com/andrey-yantsen/teko-astra-go"
+	"github.com/contactless/wbgo"
 )
 
 type multipleAddress []uint16
@@ -34,11 +35,13 @@ func main() {
 	serial := flag.String("serial", "/dev/ttyAPP4", "serial port address (/dev/...)")
 	flag.Var(&addresses, "address", "device address")
 	broker := flag.String("broker", "tcp://localhost:1883", "MQTT broker url")
+	debug := flag.Bool("debug", false, "Enable debug output")
 	flag.Parse()
+	wbgo.SetDebuggingEnabled(*debug)
 	if len(addresses) == 0 {
 		panic("You should specify at least one address")
 	}
-	if driver, err := astra_l.Connect(*serial); err != nil {
+	if driver, err := astra_l.Connect(*serial, wbgo.Debug); err != nil {
 		panic(err)
 	} else {
 		driver.Start()
