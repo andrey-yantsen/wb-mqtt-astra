@@ -101,11 +101,15 @@ func (a *AstraDetector) handleEvent(e interface{}) {
 			a.Observer.OnValue(a, fieldName, strconv.Itoa(f.Interface().(int)))
 		case uint8:
 			if !a.fieldsInitialized {
-				a.Observer.OnNewControl(a, wbgo.Control{
+				control := wbgo.Control{
 					Name:        fieldName,
 					Value:       "0",
 					Writability: wbgo.ForceReadOnly,
-				})
+				}
+				if fieldName == "Power" || fieldName == "Smoke" {
+					control.Units = "%"
+				}
+				a.Observer.OnNewControl(a, control)
 			}
 			a.Observer.OnValue(a, fieldName, strconv.Itoa(int(f.Interface().(uint8))))
 		case astra_l.SensorInfo:
