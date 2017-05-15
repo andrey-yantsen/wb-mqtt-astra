@@ -45,7 +45,11 @@ FYI: Рекомендую покупать Астра-Z, а не Астра РИ
 =============
 
 ## Установка
-Найдите последнюю версию драйвера в разделе [Releases](https://github.com/andrey-yantsen/wb-mqtt-astra/releases/latest)
+Для удобства установки и обновления, с помощью сервиса [packagecloud.io](https://packagecloud.io) был создан [репозиторий](https://packagecloud.io/wb-mqtt-astra/main/install),
+после настройки которого вы сможете установить пакет как обычно, с помощью команды `apt-get install wb-mqtt-astra`.
+
+Так же можно установить всё вручную, из текущего репозитория: найдите последнюю
+версию драйвера в разделе [Releases](https://github.com/andrey-yantsen/wb-mqtt-astra/releases/latest)
 и загрузите её на WirenBoard командой (не забудьте заменить ссылку на корректную)
 ```
 wget https://github.com/andrey-yantsen/wb-mqtt-astra/releases/download/v0.1/wb-mqtt-astra_0.1_armel.deb
