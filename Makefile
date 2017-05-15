@@ -35,3 +35,23 @@ install:
 	install -m 0644 initscripts/defaults $(DESTDIR)/etc/default/wb-mqtt-astra
 	install -m 0755 wb-mqtt-astra $(DESTDIR)/usr/bin/
 	install -m 0755 initscripts/wb-mqtt-astra $(DESTDIR)/etc/init.d/wb-mqtt-astra
+
+AUTHOR_NAME = $(shell git config user.name)
+AUTHOR_EMAIL = $(shell git config user.email)
+DATE = $(shell date '+%a, %d %b %Y %T %z')
+RELEASE_URGENCY = low
+RELEASE_DEBIAN_TARGET = wheezy
+release:
+	@git fetch --tags
+	@echo 'Changes:' && git log --format="* %s" `git describe --tags --abbrev=0`..HEAD | cat; echo ''
+	@echo 'What version is it?' && read version && \
+	  echo "wb-mqtt-astra ($$version) $(RELEASE_DEBIAN_TARGET); urgency=$(RELEASE_URGENCY)" > debian/changelog_tmp &&\
+	  echo >> debian/changelog_tmp &&\
+	  git log --format="  * %s" `git describe --tags --abbrev=0`..HEAD >> debian/changelog_tmp &&\
+	  echo >> debian/changelog_tmp &&\
+	  echo ' -- $(AUTHOR_NAME) <$(AUTHOR_EMAIL)>  $(DATE)' >> debian/changelog_tmp &&\
+	  echo >> debian/changelog_tmp && cat debian/changelog >> debian/changelog_tmp &&\
+	  mv debian/changelog_tmp debian/changelog &&\
+	  SSH_AUTH_SOCK= WBDEV_TARGET=$(RELEASE_DEBIAN_TARGET)-armel wbdev gdeb &&\
+	  hub release create -d -a ../wb-mqtt-astra_$${version}_armel.deb v$$version &&\
+	  rm ../wb-mqtt-astra_$${version}*
