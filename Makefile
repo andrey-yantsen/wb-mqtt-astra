@@ -52,6 +52,7 @@ release:
 	  echo ' -- $(AUTHOR_NAME) <$(AUTHOR_EMAIL)>  $(DATE)' >> debian/changelog_tmp &&\
 	  echo >> debian/changelog_tmp && cat debian/changelog >> debian/changelog_tmp &&\
 	  mv debian/changelog_tmp debian/changelog &&\
+	  git add debian/changelog && git commit -m "add changelog for release v$${version}" && git push &&\
 	  SSH_AUTH_SOCK= WBDEV_TARGET=$(RELEASE_DEBIAN_TARGET)-armel wbdev gdeb &&\
 	  package_cloud push wb-mqtt-astra/main/debian/$(RELEASE_DEBIAN_TARGET) ../wb-mqtt-astra_$${version}_armel.deb &&\
 	  hub release create -d -a ../wb-mqtt-astra_$${version}_armel.deb -m 'changelog' v$$version &&\
