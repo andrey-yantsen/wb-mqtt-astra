@@ -135,6 +135,38 @@ func (a *AstraDevice) AcceptOnValue(name, value string) bool {
 				}
 			}
 		}()
+	case "control_time":
+		a.model.lock()
+		go func() {
+			defer a.model.unlock()
+			defer func() {
+				if cfg, err := a.device.GetNetLevel2Config(); err != nil {
+					wbgo.Error.Println("Got error while checking control time ", err)
+				} else {
+					wbgo.Info.Println("Control time set to", cfg.ControlTime)
+					a.Observer.OnValue(a, "control_time", strconv.Itoa(int(cfg.ControlTime)))
+				}
+			}()
+			if controlTime, err := strconv.Atoi(value); err != nil {
+				wbgo.Error.Println("Unable to convert control time to int ", err)
+			} else if controlTime == 0 {
+				wbgo.Error.Println("Unable to set control time to 0")
+			} else if controlTime > 240 {
+				wbgo.Error.Println("Control time should be less than 241")
+			} else {
+				if cfg, err := a.device.GetNetLevel2Config(); err != nil {
+					wbgo.Error.Println("Got error while checking current config", err)
+				} else {
+					cfgW := astra_l.RfNetParametersToSet{
+						ChannelNo:   cfg.ChannelNo,
+						ControlTime: uint8(controlTime),
+					}
+					if err := a.device.SetNetLevel2Config(cfgW); err != nil {
+						wbgo.Error.Println("Got error while changing control time ", err)
+					}
+				}
+			}
+		}()
 	case "new_radio_mode":
 		a.model.lock()
 		go func() {
@@ -271,6 +303,7 @@ func (a *AstraDevice) initExistsDevice() {
 
 	a.Observer.OnValue(a, "l2_channel", strconv.Itoa(int(n.ChannelNo)))
 	a.Observer.OnValue(a, "new_radio_mode", strconv.Itoa(int(n.RfType)))
+	a.Observer.OnValue(a, "control_time", strconv.Itoa(int(n.ControlTime)))
 
 	a.exists = true
 }
@@ -296,6 +329,15 @@ func (a *AstraDevice) Publish() {
 		Value:  "0",
 		HasMax: true,
 		Max:    3,
+	})
+
+	a.Observer.OnNewControl(a, wbgo.Control{
+		Name:   "control_time",
+		Title:  "Radio channel control time",
+		Type:   "range",
+		Value:  "0",
+		HasMax: true,
+		Max:    240,
 	})
 
 	for alias, title := range sharedAlarms {
