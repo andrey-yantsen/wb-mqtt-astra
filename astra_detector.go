@@ -45,7 +45,7 @@ func (a *AstraDetector) handleEvent(e interface{}) {
 	v := reflect.ValueOf(e)
 	for i := 0; i < v.NumField(); i++ {
 		f := v.Field(i)
-		if !f.CanSet() {
+		if !f.CanInterface() {
 			continue
 		}
 		fieldName := v.Type().Field(i).Name
