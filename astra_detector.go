@@ -25,7 +25,7 @@ func (a *AstraDetector) AcceptValue(name, value string) {
 
 func (a *AstraDetector) AcceptOnValue(name, value string) bool {
 	switch name {
-	case "delete":
+	case "delete_sensor":
 		if value == "1" {
 			a.remove()
 		}
@@ -123,7 +123,7 @@ func (a *AstraDetector) handleEvent(e interface{}) {
 
 func (a *AstraDetector) Publish() {
 	a.Observer.OnNewControl(a, wbgo.Control{
-		Name:  "delete",
+		Name:  "delete_sensor",
 		Title: "Delete sensor",
 		Type:  "switch",
 		Value: "0",
