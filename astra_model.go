@@ -11,12 +11,13 @@ import (
 
 type AstraModel struct {
 	wbgo.ModelBase
-	astra     *astra_l.Driver
-	devices   map[uint16]*AstraDevice
-	addresses multipleAddress
-	started   bool
-	mutex     *sync.Mutex
-	locked    bool
+	astra             *astra_l.Driver
+	devices           map[uint16]*AstraDevice
+	addresses         multipleAddress
+	started           bool
+	mutex             *sync.Mutex
+	locked            bool
+	processTestEvents bool
 }
 
 func (a *AstraModel) lock() {

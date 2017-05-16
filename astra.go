@@ -36,6 +36,7 @@ func main() {
 	flag.Var(&addresses, "address", "device address")
 	broker := flag.String("broker", "tcp://localhost:1883", "MQTT broker url")
 	debug := flag.Bool("debug", false, "Enable debug output")
+	processTestEvents := flag.Bool("process-test-events", false, "Do not ignore test events emitted by detectors")
 	flag.Parse()
 	wbgo.SetDebuggingEnabled(*debug)
 	if len(addresses) == 0 {
@@ -45,7 +46,7 @@ func main() {
 		panic(err)
 	} else {
 		driver.Start()
-		startDaemon(driver, addresses, *broker)
+		startDaemon(driver, addresses, *broker, *processTestEvents)
 		for {
 			time.Sleep(1 * time.Second)
 		}

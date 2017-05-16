@@ -206,15 +206,20 @@ func (a *AstraDevice) Poll() {
 			wbgo.Info.Printf("Received event %T %+v\n", e, e)
 			switch e := e.(type) {
 			case astra_l.EventNoLink:
-				as := a.ensureSensor(e.Sensor)
-				as.handleEvent(e)
+				as := a.ensureSensor(e.GetSensor())
+				if !e.IsTestEvent() || a.model.processTestEvents {
+					as.handleEvent(e)
+				}
 			case astra_l.EventSStateOtherWithNoData, astra_l.EventSStateOtherWithSmoke,
 				astra_l.EventSStateOtherWithTemperature, astra_l.EventSStateOtherWithPower,
 				astra_l.EventSStateRimRtr, astra_l.EventSStateRtmLC, astra_l.EventSStateBrr,
 				astra_l.EventSStateKeychain:
-				as := a.ensureSensor(e.(astra_l.EventWithSensor).GetSensor())
-				as.handleEvent(e)
-				as.fieldsInitialized = true
+				ev := e.(astra_l.SensorEvent)
+				as := a.ensureSensor(ev.GetSensor())
+				if !ev.IsTestEvent() || a.model.processTestEvents {
+					as.handleEvent(e)
+					as.fieldsInitialized = true
+				}
 			case astra_l.EventRRStateTamperNorm:
 				a.Observer.OnValue(a, "tamper", "0")
 			case astra_l.EventRRStateTamperFault:

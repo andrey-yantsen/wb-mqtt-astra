@@ -10,11 +10,12 @@ import (
 
 const driverClientId = "astra"
 
-func startDaemon(astra *astra_l.Driver, addresses multipleAddress, brokerAddress string) {
+func startDaemon(astra *astra_l.Driver, addresses multipleAddress, brokerAddress string, processTestEvents bool) {
 	model := &AstraModel{
-		astra:     astra,
-		addresses: addresses,
-		mutex:     &sync.Mutex{},
+		astra:             astra,
+		addresses:         addresses,
+		mutex:             &sync.Mutex{},
+		processTestEvents: processTestEvents,
 	}
 	wDriver := wbgo.NewDriver(model, wbgo.NewPahoMQTTClient(brokerAddress, driverClientId, true))
 	wDriver.SetPollInterval(100 * time.Millisecond)
