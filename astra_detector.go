@@ -45,6 +45,9 @@ func (a *AstraDetector) handleEvent(e interface{}) {
 	v := reflect.ValueOf(e)
 	for i := 0; i < v.NumField(); i++ {
 		f := v.Field(i)
+		if !f.CanSet() {
+			continue
+		}
 		fieldName := v.Type().Field(i).Name
 		switch fi := f.Interface().(type) {
 		case astra_l.EventSStateOtherBase, astra_l.EventSStateBase, astra_l.EventNoLink:
