@@ -363,6 +363,8 @@ func (a *AstraDevice) Publish() {
 func (a *AstraDevice) ensureSensor(s astra_l.SensorInfo) *AstraDetector {
 	as := a.getSensor(s)
 	a.modelObserver.OnNewDevice(as)
-	as.Publish()
+	if !as.fieldsInitialized {
+		as.Publish()
+	}
 	return as
 }
