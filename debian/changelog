@@ -1,3 +1,10 @@
+wb-mqtt-astra (0.4) wheezy; urgency=low
+
+  * handle test events
+  * [readme] add troubleshooting
+
+ -- Andrey Yantsen <andrey@janzen.su>  Tue, 16 May 2017 12:13:44 +0300
+
 wb-mqtt-astra (0.3.2) wheezy; urgency=low
 
   * add debug mode
