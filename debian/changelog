@@ -1,3 +1,10 @@
+wb-mqtt-astra (0.4.1) wheezy; urgency=low
+
+  * do not call Publish() for initialized sensors
+  * properly handle unexported events` fields
+
+ -- Andrey Yantsen <andrey@janzen.su>  Tue, 16 May 2017 20:34:43 +0300
+
 wb-mqtt-astra (0.4) wheezy; urgency=low
 
   * handle test events
