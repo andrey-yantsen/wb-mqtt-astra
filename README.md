@@ -7,11 +7,9 @@
 
 Проверена работоспособность драйвера совместно со следующими устройствами:
 1. [Wiren Board 5 rev 5.8](http://contactless.ru/wiki/index.php/Wiren_Board_5:_%D0%90%D0%BF%D0%BF%D0%B0%D1%80%D0%B0%D1%82%D0%BD%D1%8B%D0%B5_%D1%80%D0%B5%D0%B2%D0%B8%D0%B7%D0%B8%D0%B8)
-2. [Астра РИ-М РР](http://www.teko.biz/catalog/823/7006/) с прошивкой `RRs-rim-av3_0`
-3. [Датчик изменения положения Астра-3531](http://www.teko.biz/catalog/675/5326/)
-4. [Датчик протечки Астра-361 РК](http://www.teko.biz/catalog/295/4921/)
-5. [Датчик движения Астра-5131.А](http://www.teko.biz/catalog/223/680/)
-6. [Датчик открытия магнитоконтактный Астра-3321](http://www.teko.biz/catalog/333/849/)
+2. [Wiren Board 3.5](http://contactless.ru/wiki/index.php/Wiren_Board_Smart_Home_3.5)
+3. [Астра РИ-М РР](http://www.teko.biz/catalog/823/7006/) с прошивкой `RRs-rim-av3_0`
+4. [Различные извещатели](/sensors.md) 
 
 Преверена работа с единственным Астра РИ-М на канале. Теоретически драйвер
 должен работать с любым количеством РИ-М на канале (в пределах 250 штук, в связи
