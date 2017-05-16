@@ -3,7 +3,6 @@ package main
 import (
 	"reflect"
 	"strconv"
-	"time"
 
 	"github.com/andrey-yantsen/teko-astra-go"
 	"github.com/contactless/wbgo"
@@ -41,7 +40,6 @@ func (a *AstraDetector) remove() {
 
 func (a *AstraDetector) handleEvent(e interface{}) {
 	wbgo.Debug.Printf("Inspecting %T %+v\n", e, e)
-	a.Observer.OnValue(a, "Last event time", time.Now().Format(time.UnixDate))
 	v := reflect.ValueOf(e)
 	for i := 0; i < v.NumField(); i++ {
 		f := v.Field(i)
