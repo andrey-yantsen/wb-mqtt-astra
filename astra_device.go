@@ -29,6 +29,12 @@ func (a *AstraDevice) AcceptValue(name, value string) {
 	// ignore retained values
 }
 
+func (a *AstraDevice) deleteSensor(id uint16) {
+	a.device.DeleteLevel2Device(id)
+	a.modelObserver.RemoveDevice(a)
+	delete(a.sensors, id)
+}
+
 func (a *AstraDevice) getSensor(s astra_l.SensorInfo) *AstraDetector {
 	ret := a.getSensorById(s.Id)
 	ret.DeviceBase = wbgo.DeviceBase{

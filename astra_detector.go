@@ -27,15 +27,10 @@ func (a *AstraDetector) AcceptOnValue(name, value string) bool {
 	switch name {
 	case "delete_sensor":
 		if value == "1" {
-			a.remove()
+			a.d.deleteSensor(a.sensorInfo.Id)
 		}
 	}
 	return false
-}
-
-func (a *AstraDetector) remove() {
-	a.d.device.DeleteLevel2Device(a.sensorInfo.Id)
-	a.d.modelObserver.RemoveDevice(a)
 }
 
 func (a *AstraDetector) handleEvent(e interface{}) {
