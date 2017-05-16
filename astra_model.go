@@ -53,7 +53,7 @@ func (a *AstraModel) Start() error {
 		a.devices[address] = ad
 
 		if f, err := ad.device.FindDevice(); err == nil {
-			ad.DevTitle = f.DeviceType.Name
+			ad.DevTitle = fmt.Sprintf("%s [%d]", f.DeviceType.Name, address)
 		}
 
 		a.Observer.OnNewDevice(ad)

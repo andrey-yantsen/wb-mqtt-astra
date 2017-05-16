@@ -31,7 +31,7 @@ func (a *AstraDevice) getSensor(s astra_l.SensorInfo) *AstraDetector {
 	ret := a.getSensorById(s.Id)
 	ret.DeviceBase = wbgo.DeviceBase{
 		DevName:  fmt.Sprintf("astra_%d_sensor_%d", a.address, s.Id),
-		DevTitle: s.Type.Name,
+		DevTitle: fmt.Sprintf("%s [%d-%d]", s.Type.Name, a.address, s.Id),
 	}
 	ret.sensorInfo = s
 	return ret
