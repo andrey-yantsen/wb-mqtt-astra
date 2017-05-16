@@ -130,10 +130,4 @@ func (a *AstraDetector) Publish() {
 		Type:  "switch",
 		Value: "0",
 	})
-	a.Observer.OnNewControl(a, wbgo.Control{
-		Name:        "sensor id",
-		Title:       "Sensor Id",
-		Value:       strconv.Itoa(int(a.sensorInfo.Id)),
-		Writability: wbgo.ForceReadOnly,
-	})
 }

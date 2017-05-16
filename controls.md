@@ -72,8 +72,6 @@ mqtt-delete-retained '/devices/astra_1_sensor_1/#'
 mqtt-delete-retained '/devices/astra_1_sensor_1/#'
 ```
 </dd>
-<dt>sensor id</dt>
-<dd>Идентификатор, под которым извещатель зарегистрирован в РИ-М / Z.</dd>
 <dt>RSSI</dt>
 <dd>Значение RSSI при последнем общении с извещателем.</dd>
 <dt>IsNoLink</dt>
