@@ -1,3 +1,17 @@
+wb-mqtt-astra (0.4.3) wheezy; urgency=low
+
+  * update docs about devices` deletion process
+  * fix some typos
+  * do not delete device via mqtt
+  * forget about sensor after its deletion
+  * [readme] mark Astra-421 & WB3.5 as tested and move list of tested sensors to separate file
+  * rename sensors` delete control
+  * update `Last event time` in another place
+  * do not store sensor id in mqtt
+  * embed device address & sensor id in the title
+
+ -- Andrey Yantsen <andrey@janzen.su>  Wed, 17 May 2017 13:24:51 +0300
+
 wb-mqtt-astra (0.4.2) wheezy; urgency=low
 
   * fix panicing on unexported events` fields, for real this time
