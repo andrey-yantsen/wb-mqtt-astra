@@ -23,7 +23,7 @@ func (i *multipleAddress) Set(value string) error {
 		return err
 	} else {
 		if a < 1 {
-			return errors.New("Address must be greather than 0")
+			return errors.New("Address must be greater than 0")
 		} else if a > 0xFA {
 			return errors.New("Address must be less than 250")
 		}

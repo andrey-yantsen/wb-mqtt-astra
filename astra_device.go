@@ -171,7 +171,7 @@ func (a *AstraDevice) AcceptOnValue(name, value string) bool {
 				if cfg, err := a.device.GetNetLevel2Config(); err != nil {
 					wbgo.Error.Println("Got error while checking net config", err)
 				} else {
-					wbgo.Info.Println("Radimode set to", cfg.RfType)
+					wbgo.Info.Println("Radio mode set to", cfg.RfType)
 					a.Observer.OnValue(a, "new_radio_mode", strconv.Itoa(int(cfg.RfType)))
 				}
 			}()
@@ -244,7 +244,7 @@ func (a *AstraDevice) Poll() {
 var sharedSwitches = map[string]string{
 	"register":       "Register new Astra-RI-M",
 	"register_l2":    "Register new Level2 detector",
-	"delete_l2_all":  "Deregister all Level2 detectors",
+	"delete_l2_all":  "Unregister all Level2 detectors",
 	"new_radio_mode": "Use new radio mode",
 }
 
