@@ -6,6 +6,8 @@ import (
 	"strconv"
 	"time"
 
+	"fmt"
+
 	astra_l "github.com/andrey-yantsen/teko-astra-go"
 	"github.com/contactless/wbgo"
 )
@@ -37,6 +39,7 @@ func main() {
 	broker := flag.String("broker", "tcp://localhost:1883", "MQTT broker url")
 	debug := flag.Bool("debug", false, "Enable debug output")
 	processTestEvents := flag.Bool("process-test-events", false, "Do not ignore test events emitted by detectors")
+	deleteDevice := flag.Bool("delete-device", false, "Reset registration status of the device with given address")
 	flag.Parse()
 	wbgo.SetDebuggingEnabled(*debug)
 	if len(addresses) == 0 {
@@ -46,9 +49,20 @@ func main() {
 		panic(err)
 	} else {
 		driver.Start()
-		startDaemon(driver, addresses, *broker, *processTestEvents)
-		for {
-			time.Sleep(1 * time.Second)
+		if *deleteDevice {
+			for _, addr := range addresses {
+				fmt.Printf("Removing device %d ... ", addr)
+				if err := driver.GetDevice(addr).DeleteDevice(); err != nil {
+					fmt.Println(err)
+				} else {
+					fmt.Println("ok")
+				}
+			}
+		} else {
+			startDaemon(driver, addresses, *broker, *processTestEvents)
+			for {
+				time.Sleep(1 * time.Second)
+			}
 		}
 	}
 }

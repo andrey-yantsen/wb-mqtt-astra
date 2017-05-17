@@ -81,18 +81,6 @@ func (a *AstraDevice) AcceptOnValue(name, value string) bool {
 				}
 			}
 		}()
-	case "delete":
-		a.model.lock()
-		go func() {
-			defer a.model.unlock()
-			if err := a.device.DeleteDevice(); err != nil {
-				wbgo.Error.Println("Got error while deleting device ", err)
-				a.Observer.OnValue(a, "delete", "0")
-			} else {
-				a.Observer.OnValue(a, "register", "0")
-				a.modelObserver.RemoveDevice(a)
-			}
-		}()
 	case "register_l2":
 		a.model.lock()
 		go func() {
@@ -255,7 +243,6 @@ func (a *AstraDevice) Poll() {
 
 var sharedSwitches = map[string]string{
 	"register":       "Register new Astra-RI-M",
-	"delete":         "Deregister Astra-RI-M",
 	"register_l2":    "Register new Level2 detector",
 	"delete_l2_all":  "Deregister all Level2 detectors",
 	"new_radio_mode": "Use new radio mode",
@@ -326,9 +313,6 @@ func (a *AstraDevice) initExistsDevice() {
 func (a *AstraDevice) Publish() {
 	for alias, title := range sharedSwitches {
 		value := "0"
-		if alias == "delete" {
-			value = "1"
-		}
 		a.Observer.OnNewControl(a, wbgo.Control{
 			Name:  alias,
 			Title: title,
