@@ -1,3 +1,9 @@
+wb-mqtt-astra (0.4.4) wheezy; urgency=low
+
+  * fix temperature sensor
+
+ -- Andrey Yantsen <andrey@janzen.su>  Wed, 05 Jul 2017 19:08:51 +0300
+
 wb-mqtt-astra (0.4.3) wheezy; urgency=low
 
   * update docs about devices` deletion process
