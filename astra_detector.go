@@ -82,7 +82,7 @@ func (a *AstraDetector) handleEvent(e interface{}) {
 			} else {
 				a.Observer.OnValue(a, fieldName, "0")
 			}
-		case int:
+		case int, int8:
 			if !a.fieldsInitialized {
 				control := wbgo.Control{
 					Name:        fieldName,
@@ -94,8 +94,8 @@ func (a *AstraDetector) handleEvent(e interface{}) {
 				}
 				a.Observer.OnNewControl(a, control)
 			}
-			a.Observer.OnValue(a, fieldName, strconv.Itoa(f.Interface().(int)))
-		case uint8:
+			a.Observer.OnValue(a, fieldName, strconv.Itoa(int(f.Int())))
+		case uint, uint8:
 			if !a.fieldsInitialized {
 				control := wbgo.Control{
 					Name:        fieldName,
@@ -107,7 +107,7 @@ func (a *AstraDetector) handleEvent(e interface{}) {
 				}
 				a.Observer.OnNewControl(a, control)
 			}
-			a.Observer.OnValue(a, fieldName, strconv.Itoa(int(f.Interface().(uint8))))
+			a.Observer.OnValue(a, fieldName, strconv.Itoa(int(f.Uint())))
 		case astra_l.SensorInfo:
 			// do nothing
 		default:
