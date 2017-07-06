@@ -205,7 +205,7 @@ func (a *AstraDevice) Poll() {
 			case astra_l.EventNoLink:
 				as := a.ensureSensor(e.GetSensor())
 				if !e.IsTestEvent() || a.model.processTestEvents {
-					a.Observer.OnValue(a, "Last event time", time.Now().Format(time.UnixDate))
+					as.Observer.OnValue(a, "Last event time", time.Now().Format(time.UnixDate))
 					as.handleEvent(e)
 				}
 			case astra_l.EventSStateOtherWithNoData, astra_l.EventSStateOtherWithSmoke,
@@ -215,7 +215,7 @@ func (a *AstraDevice) Poll() {
 				ev := e.(astra_l.SensorEvent)
 				as := a.ensureSensor(ev.GetSensor())
 				if !ev.IsTestEvent() || a.model.processTestEvents {
-					a.Observer.OnValue(a, "Last event time", time.Now().Format(time.UnixDate))
+					as.Observer.OnValue(a, "Last event time", time.Now().Format(time.UnixDate))
 					as.handleEvent(e)
 				}
 			case astra_l.EventRRStateTamperNorm:
