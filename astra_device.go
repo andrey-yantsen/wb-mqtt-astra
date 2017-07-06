@@ -208,9 +208,9 @@ func (a *AstraDevice) Poll() {
 					as.handleEvent(e)
 				}
 			case astra_l.EventSStateOtherWithNoData, astra_l.EventSStateOtherWithSmoke,
-				astra_l.EventSStateOtherWithTemperature, astra_l.EventSStateOtherWithPower,
-				astra_l.EventSStateRimRtr, astra_l.EventSStateRtmLC, astra_l.EventSStateBrr,
-				astra_l.EventSStateKeychain:
+				astra_l.EventSStateOtherWithTemperature, astra_l.EventSStateOtherWithTemperature2,
+				astra_l.EventSStateOtherWithPower, astra_l.EventSStateRimRtr, astra_l.EventSStateRtmLC,
+				astra_l.EventSStateBrr, astra_l.EventSStateKeychain:
 				ev := e.(astra_l.SensorEvent)
 				as := a.ensureSensor(ev.GetSensor())
 				if !ev.IsTestEvent() || a.model.processTestEvents {

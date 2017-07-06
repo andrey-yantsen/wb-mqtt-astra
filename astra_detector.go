@@ -89,7 +89,7 @@ func (a *AstraDetector) handleEvent(e interface{}) {
 					Value:       "0",
 					Writability: wbgo.ForceReadOnly,
 				}
-				if fieldName == "Temperature" {
+				if fieldName == "Temperature" || fieldName == "Temperature2" {
 					control.Type = "temperature"
 				}
 				a.Observer.OnNewControl(a, control)
