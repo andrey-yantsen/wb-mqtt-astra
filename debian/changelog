@@ -1,3 +1,9 @@
+wb-mqtt-astra (0.4.5.1) wheezy; urgency=low
+
+  * fix event fields initialization
+
+ -- Andrey Yantsen <andrey@janzen.su>  Thu, 06 Jul 2017 12:50:32 +0300
+
 wb-mqtt-astra (0.4.5) wheezy; urgency=low
 
   * handle Temperature2 events
