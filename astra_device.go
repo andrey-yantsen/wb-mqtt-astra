@@ -234,6 +234,10 @@ func (a *AstraDevice) Poll() {
 				a.Observer.OnValue(a, "power_fault", "1")
 			case astra_l.EventRRStatePsuNorm:
 				a.Observer.OnValue(a, "power_fault", "0")
+			case astra_l.EventRadioBlocked:
+				a.Observer.OnValue(a, "rf_blocked", "1")
+			case astra_l.EventRadioOk:
+				a.Observer.OnValue(a, "rf_blocked", "0")
 			default:
 				wbgo.Error.Printf("Received unexpected event %T %+v\n", e, e)
 			}
