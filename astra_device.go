@@ -52,7 +52,8 @@ func (a *AstraDevice) getSensorById(id uint16) *AstraDetector {
 			DeviceBase: wbgo.DeviceBase{
 				DevName: devName,
 			},
-			d: a,
+			d:                 a,
+			fieldsInitialized: make(map[string]bool),
 		}
 	}
 	return a.sensors[id]
@@ -216,7 +217,6 @@ func (a *AstraDevice) Poll() {
 				if !ev.IsTestEvent() || a.model.processTestEvents {
 					a.Observer.OnValue(a, "Last event time", time.Now().Format(time.UnixDate))
 					as.handleEvent(e)
-					as.fieldsInitialized = true
 				}
 			case astra_l.EventRRStateTamperNorm:
 				a.Observer.OnValue(a, "tamper", "0")
@@ -357,8 +357,9 @@ func (a *AstraDevice) Publish() {
 func (a *AstraDevice) ensureSensor(s astra_l.SensorInfo) *AstraDetector {
 	as := a.getSensor(s)
 	a.modelObserver.OnNewDevice(as)
-	if !as.fieldsInitialized {
+	if _, ok := as.fieldsInitialized["publish"]; !ok {
 		as.Publish()
+		as.fieldsInitialized["publish"] = true
 	}
 	return as
 }

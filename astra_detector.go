@@ -12,7 +12,7 @@ type AstraDetector struct {
 	wbgo.DeviceBase
 	sensorInfo        astra_l.SensorInfo
 	astraAddress      uint16
-	fieldsInitialized bool
+	fieldsInitialized map[string]bool
 	d                 *AstraDevice
 }
 
@@ -46,7 +46,7 @@ func (a *AstraDetector) handleEvent(e interface{}) {
 		case astra_l.EventSStateOtherBase, astra_l.EventSStateBase, astra_l.EventNoLink:
 			a.handleEvent(f.Interface())
 		case astra_l.EParameterCode:
-			if !a.fieldsInitialized {
+			if _, ok := a.fieldsInitialized[fieldName]; !ok {
 				a.Observer.OnNewControl(a, wbgo.Control{
 					Name:        fieldName,
 					Type:        "alarm",
@@ -57,6 +57,7 @@ func (a *AstraDetector) handleEvent(e interface{}) {
 					Type:        "alarm",
 					Writability: wbgo.ForceReadOnly,
 				})
+				a.fieldsInitialized[fieldName] = true
 			}
 			switch f.Interface().(astra_l.EParameterCode) {
 			case astra_l.PcNorm:
@@ -69,13 +70,14 @@ func (a *AstraDetector) handleEvent(e interface{}) {
 				a.Observer.OnValue(a, fieldName+"_confirmed", "1")
 			}
 		case bool:
-			if !a.fieldsInitialized {
+			if _, ok := a.fieldsInitialized[fieldName]; !ok {
 				a.Observer.OnNewControl(a, wbgo.Control{
 					Name:        fieldName,
 					Type:        "alarm",
 					Value:       "0",
 					Writability: wbgo.ForceReadOnly,
 				})
+				a.fieldsInitialized[fieldName] = true
 			}
 			if f.Interface().(bool) {
 				a.Observer.OnValue(a, fieldName, "1")
@@ -83,7 +85,7 @@ func (a *AstraDetector) handleEvent(e interface{}) {
 				a.Observer.OnValue(a, fieldName, "0")
 			}
 		case int, int8:
-			if !a.fieldsInitialized {
+			if _, ok := a.fieldsInitialized[fieldName]; !ok {
 				control := wbgo.Control{
 					Name:        fieldName,
 					Value:       "0",
@@ -93,19 +95,21 @@ func (a *AstraDetector) handleEvent(e interface{}) {
 					control.Type = "temperature"
 				}
 				a.Observer.OnNewControl(a, control)
+				a.fieldsInitialized[fieldName] = true
 			}
 			a.Observer.OnValue(a, fieldName, strconv.Itoa(int(f.Int())))
 		case uint, uint8:
-			if !a.fieldsInitialized {
+			if _, ok := a.fieldsInitialized[fieldName]; !ok {
 				control := wbgo.Control{
 					Name:        fieldName,
 					Value:       "0",
 					Writability: wbgo.ForceReadOnly,
 				}
-				if fieldName == "Power" || fieldName == "Smoke" {
+				if fieldName == "Power" || fieldName == "Smoke" || fieldName == "Dust" {
 					control.Units = "%"
 				}
 				a.Observer.OnNewControl(a, control)
+				a.fieldsInitialized[fieldName] = true
 			}
 			a.Observer.OnValue(a, fieldName, strconv.Itoa(int(f.Uint())))
 		case astra_l.SensorInfo:
