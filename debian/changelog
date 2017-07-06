@@ -1,3 +1,9 @@
+wb-mqtt-astra (0.4.6) wheezy; urgency=low
+
+  * handle EventRadioBlocked and EventRadioOk
+
+ -- Andrey Yantsen <andrey@janzen.su>  Thu, 06 Jul 2017 15:03:20 +0300
+
 wb-mqtt-astra (0.4.5.1) wheezy; urgency=low
 
   * fix event fields initialization
