@@ -1,3 +1,10 @@
+wb-mqtt-astra (0.4.5) wheezy; urgency=low
+
+  * handle Temperature2 events
+  * [sensors.md] declare support for Astra-3731
+
+ -- Andrey Yantsen <andrey@janzen.su>  Thu, 06 Jul 2017 12:15:44 +0300
+
 wb-mqtt-astra (0.4.4) wheezy; urgency=low
 
   * fix temperature sensor
