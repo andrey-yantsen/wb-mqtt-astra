@@ -342,7 +342,7 @@ func (a *AstraDevice) Publish() {
 		a.Observer.OnNewControl(a, wbgo.Control{
 			Name:        alias,
 			Title:       title,
-			Type:        "alarm",
+			Type:        "switch",
 			Value:       "0",
 			Writability: wbgo.ForceReadOnly,
 		})

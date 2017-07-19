@@ -49,12 +49,12 @@ func (a *AstraDetector) handleEvent(e interface{}) {
 			if _, ok := a.fieldsInitialized[fieldName]; !ok {
 				a.Observer.OnNewControl(a, wbgo.Control{
 					Name:        fieldName,
-					Type:        "alarm",
+					Type:        "switch",
 					Writability: wbgo.ForceReadOnly,
 				})
 				a.Observer.OnNewControl(a, wbgo.Control{
 					Name:        fieldName + "_confirmed",
-					Type:        "alarm",
+					Type:        "switch",
 					Writability: wbgo.ForceReadOnly,
 				})
 				a.fieldsInitialized[fieldName] = true
@@ -73,7 +73,7 @@ func (a *AstraDetector) handleEvent(e interface{}) {
 			if _, ok := a.fieldsInitialized[fieldName]; !ok {
 				a.Observer.OnNewControl(a, wbgo.Control{
 					Name:        fieldName,
-					Type:        "alarm",
+					Type:        "switch",
 					Value:       "0",
 					Writability: wbgo.ForceReadOnly,
 				})
