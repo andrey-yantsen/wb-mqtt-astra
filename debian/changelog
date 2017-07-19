@@ -1,3 +1,11 @@
+wb-mqtt-astra (0.5) wheezy; urgency=low
+
+  * use `switch` type instead of `alarm`
+  * remove extra code in events processing
+  * fix `Last Event Time` inside sensors
+
+ -- Andrey Yantsen <andrey@janzen.su>  Wed, 19 Jul 2017 13:35:59 +0300
+
 wb-mqtt-astra (0.4.7) wheezy; urgency=low
 
   * store `Last event time` in sensor values
