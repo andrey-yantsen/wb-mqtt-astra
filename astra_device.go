@@ -203,13 +203,7 @@ func (a *AstraDevice) Poll() {
 		for _, e := range events {
 			wbgo.Info.Printf("Received event %T %+v\n", e, e)
 			switch e := e.(type) {
-			case astra_l.EventNoLink:
-				as := a.ensureSensor(e.GetSensor())
-				if !e.IsTestEvent() || a.model.processTestEvents {
-					as.Observer.OnValue(as, "Last event time", time.Now().Format(time.UnixDate))
-					as.handleEvent(e)
-				}
-			case astra_l.EventSStateOtherWithNoData, astra_l.EventSStateOtherWithSmoke,
+			case astra_l.EventNoLink, astra_l.EventSStateOtherWithNoData, astra_l.EventSStateOtherWithSmoke,
 				astra_l.EventSStateOtherWithTemperature, astra_l.EventSStateOtherWithTemperature2,
 				astra_l.EventSStateOtherWithPower, astra_l.EventSStateRimRtr, astra_l.EventSStateRtmLC,
 				astra_l.EventSStateBrr, astra_l.EventSStateKeychain:
