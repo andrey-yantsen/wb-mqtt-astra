@@ -199,13 +199,14 @@ func (a *AstraDevice) Poll() {
 			wbgo.Error.Println("Unable to get events ", err)
 		}
 	} else {
+		a.Observer.OnValue(a, "Last event time", time.Now().Format(time.UnixDate))
 		for _, e := range events {
 			wbgo.Info.Printf("Received event %T %+v\n", e, e)
 			switch e := e.(type) {
 			case astra_l.EventNoLink:
 				as := a.ensureSensor(e.GetSensor())
 				if !e.IsTestEvent() || a.model.processTestEvents {
-					as.Observer.OnValue(a, "Last event time", time.Now().Format(time.UnixDate))
+					as.Observer.OnValue(as, "Last event time", time.Now().Format(time.UnixDate))
 					as.handleEvent(e)
 				}
 			case astra_l.EventSStateOtherWithNoData, astra_l.EventSStateOtherWithSmoke,
@@ -215,7 +216,7 @@ func (a *AstraDevice) Poll() {
 				ev := e.(astra_l.SensorEvent)
 				as := a.ensureSensor(ev.GetSensor())
 				if !ev.IsTestEvent() || a.model.processTestEvents {
-					as.Observer.OnValue(a, "Last event time", time.Now().Format(time.UnixDate))
+					as.Observer.OnValue(as, "Last event time", time.Now().Format(time.UnixDate))
 					as.handleEvent(e)
 				}
 			case astra_l.EventRRStateTamperNorm:
