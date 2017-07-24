@@ -1,1 +1,2 @@
 ASTRA_OPTIONS="-address 1"
+ASTRA_LOG="/var/log/wb-mqtt-astra.log"
