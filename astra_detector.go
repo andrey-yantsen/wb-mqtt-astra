@@ -50,11 +50,13 @@ func (a *AstraDetector) handleEvent(e interface{}) {
 				a.Observer.OnNewControl(a, wbgo.Control{
 					Name:        fieldName,
 					Type:        "switch",
+					Value:       "0",
 					Writability: wbgo.ForceReadOnly,
 				})
 				a.Observer.OnNewControl(a, wbgo.Control{
 					Name:        fieldName + "_confirmed",
 					Type:        "switch",
+					Value:       "0",
 					Writability: wbgo.ForceReadOnly,
 				})
 				a.fieldsInitialized[fieldName] = true
