@@ -16,18 +16,7 @@ type AstraModel struct {
 	addresses         multipleAddress
 	started           bool
 	mutex             *sync.Mutex
-	locked            bool
 	processTestEvents bool
-}
-
-func (a *AstraModel) lock() {
-	a.mutex.Lock()
-	a.locked = true
-}
-
-func (a *AstraModel) unlock() {
-	a.mutex.Unlock()
-	a.locked = false
 }
 
 func (a *AstraModel) Start() error {
@@ -66,8 +55,8 @@ func (a *AstraModel) Stop() {
 	if !a.started {
 		panic("Model is not started")
 	}
-	defer a.unlock()
-	a.lock()
+	defer a.mutex.Unlock()
+	a.mutex.Lock()
 	a.started = false
 }
 

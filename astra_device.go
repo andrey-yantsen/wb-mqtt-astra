@@ -63,9 +63,9 @@ func (a *AstraDevice) AcceptOnValue(name, value string) bool {
 	wbgo.Debug.Printf("[%s] AcceptOn %s = %s\n", a.Name(), name, value)
 	switch name {
 	case "register":
-		a.model.lock()
+		a.model.mutex.Lock()
 		go func() {
-			defer a.model.unlock()
+			defer a.model.mutex.Unlock()
 			bcd := a.astra.GetDevice(0xFF)
 			if f, err := bcd.FindDevice(); err != nil {
 				wbgo.Error.Println("Got error while finding device to register ", err)
@@ -83,9 +83,9 @@ func (a *AstraDevice) AcceptOnValue(name, value string) bool {
 			}
 		}()
 	case "register_l2":
-		a.model.lock()
+		a.model.mutex.Lock()
 		go func() {
-			defer a.model.unlock()
+			defer a.model.mutex.Unlock()
 			defer a.Observer.OnValue(a, "register_l2", "0")
 			if s, err := a.device.RegisterLevel2Device(0); err != nil {
 				wbgo.Error.Println("Got error while registering L2 device ", err)
@@ -94,9 +94,9 @@ func (a *AstraDevice) AcceptOnValue(name, value string) bool {
 			}
 		}()
 	case "delete_l2_all":
-		a.model.lock()
+		a.model.mutex.Lock()
 		go func() {
-			defer a.model.unlock()
+			defer a.model.mutex.Unlock()
 			defer a.Observer.OnValue(a, "delete_l2_all", "0")
 			if err := a.device.DeleteAllLevel2Devices(); err != nil {
 				wbgo.Error.Println("Got error while deleting all L2 devices ", err)
@@ -107,9 +107,9 @@ func (a *AstraDevice) AcceptOnValue(name, value string) bool {
 			}
 		}()
 	case "l2_channel":
-		a.model.lock()
+		a.model.mutex.Lock()
 		go func() {
-			defer a.model.unlock()
+			defer a.model.mutex.Unlock()
 			defer func() {
 				if cfg, err := a.device.GetNetLevel2Config(); err != nil {
 					wbgo.Error.Println("Got error while checking channel ", err)
@@ -133,9 +133,9 @@ func (a *AstraDevice) AcceptOnValue(name, value string) bool {
 			}
 		}()
 	case "control_time":
-		a.model.lock()
+		a.model.mutex.Lock()
 		go func() {
-			defer a.model.unlock()
+			defer a.model.mutex.Unlock()
 			defer func() {
 				if cfg, err := a.device.GetNetLevel2Config(); err != nil {
 					wbgo.Error.Println("Got error while checking control time ", err)
@@ -165,9 +165,9 @@ func (a *AstraDevice) AcceptOnValue(name, value string) bool {
 			}
 		}()
 	case "new_radio_mode":
-		a.model.lock()
+		a.model.mutex.Lock()
 		go func() {
-			defer a.model.unlock()
+			defer a.model.mutex.Unlock()
 			defer func() {
 				if cfg, err := a.device.GetNetLevel2Config(); err != nil {
 					wbgo.Error.Println("Got error while checking net config", err)
@@ -189,11 +189,8 @@ func (a *AstraDevice) AcceptOnValue(name, value string) bool {
 }
 
 func (a *AstraDevice) Poll() {
-	if a.model.locked {
-		return
-	}
-	a.model.lock()
-	defer a.model.unlock()
+	a.model.mutex.Lock()
+	defer a.model.mutex.Unlock()
 	if events, err := a.device.GetEvents(); err != nil {
 		if err.Error() != "Read timeout" {
 			wbgo.Error.Println("Unable to get events ", err)
