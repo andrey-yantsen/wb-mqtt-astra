@@ -17,7 +17,7 @@ type AstraDetector struct {
 }
 
 func (a *AstraDetector) IsVirtual() bool {
-	return false
+	return true
 }
 
 func (a *AstraDetector) AcceptValue(name, value string) {
@@ -46,51 +46,62 @@ func (a *AstraDetector) handleEvent(e interface{}) {
 		case astra_l.EventSStateOtherBase, astra_l.EventSStateBase, astra_l.EventNoLink:
 			a.handleEvent(f.Interface())
 		case astra_l.EParameterCode:
-			if _, ok := a.fieldsInitialized[fieldName]; !ok {
-				a.Observer.OnNewControl(a, wbgo.Control{
-					Name:        fieldName,
-					Type:        "switch",
-					Value:       "0",
-					Writability: wbgo.ForceReadOnly,
-				})
-				a.Observer.OnNewControl(a, wbgo.Control{
-					Name:        fieldName + "_confirmed",
-					Type:        "switch",
-					Value:       "0",
-					Writability: wbgo.ForceReadOnly,
-				})
-				a.fieldsInitialized[fieldName] = true
-			}
-			switch f.Interface().(astra_l.EParameterCode) {
-			case astra_l.PcNorm:
-				a.Observer.OnValue(a, fieldName, "0")
-			case astra_l.PcFault:
-				a.Observer.OnValue(a, fieldName, "1")
-			case astra_l.PcNormConfirmed:
-				a.Observer.OnValue(a, fieldName+"_confirmed", "0")
-			case astra_l.PcFaultConfirmed:
-				a.Observer.OnValue(a, fieldName+"_confirmed", "1")
+			pc := f.Interface().(astra_l.EParameterCode)
+			switch pc {
+			case astra_l.PcNorm, astra_l.PcFault:
+				value := "0"
+				if pc == astra_l.PcFault {
+					value = "1"
+				}
+				if _, ok := a.fieldsInitialized[fieldName]; !ok {
+					a.Observer.OnNewControl(a, wbgo.Control{
+						Name:        fieldName,
+						Type:        "switch",
+						Value:       value,
+						Writability: wbgo.ForceReadOnly,
+					})
+					a.fieldsInitialized[fieldName] = true
+				} else {
+					a.Observer.OnValue(a, fieldName, value)
+				}
+			case astra_l.PcNormConfirmed, astra_l.PcFaultConfirmed:
+				value := "0"
+				if pc == astra_l.PcFaultConfirmed {
+					value = "1"
+				}
+				if _, ok := a.fieldsInitialized[fieldName+"_confirmed"]; !ok {
+					a.Observer.OnNewControl(a, wbgo.Control{
+						Name:        fieldName + "_confirmed",
+						Type:        "switch",
+						Value:       value,
+						Writability: wbgo.ForceReadOnly,
+					})
+					a.fieldsInitialized[fieldName+"_confirmed"] = true
+				} else {
+					a.Observer.OnValue(a, fieldName+"_confirmed", value)
+				}
 			}
 		case bool:
+			value := "0"
+			if f.Interface().(bool) {
+				value = "1"
+			}
 			if _, ok := a.fieldsInitialized[fieldName]; !ok {
 				a.Observer.OnNewControl(a, wbgo.Control{
 					Name:        fieldName,
 					Type:        "switch",
-					Value:       "0",
+					Value:       value,
 					Writability: wbgo.ForceReadOnly,
 				})
 				a.fieldsInitialized[fieldName] = true
-			}
-			if f.Interface().(bool) {
-				a.Observer.OnValue(a, fieldName, "1")
 			} else {
-				a.Observer.OnValue(a, fieldName, "0")
+				a.Observer.OnValue(a, fieldName, value)
 			}
 		case int, int8:
 			if _, ok := a.fieldsInitialized[fieldName]; !ok {
 				control := wbgo.Control{
 					Name:        fieldName,
-					Value:       "0",
+					Value:       strconv.Itoa(int(f.Int())),
 					Writability: wbgo.ForceReadOnly,
 				}
 				if fieldName == "Temperature" || fieldName == "Temperature2" {
@@ -98,13 +109,14 @@ func (a *AstraDetector) handleEvent(e interface{}) {
 				}
 				a.Observer.OnNewControl(a, control)
 				a.fieldsInitialized[fieldName] = true
+			} else {
+				a.Observer.OnValue(a, fieldName, strconv.Itoa(int(f.Int())))
 			}
-			a.Observer.OnValue(a, fieldName, strconv.Itoa(int(f.Int())))
 		case uint, uint8:
 			if _, ok := a.fieldsInitialized[fieldName]; !ok {
 				control := wbgo.Control{
 					Name:        fieldName,
-					Value:       "0",
+					Value:       strconv.Itoa(int(f.Uint())),
 					Writability: wbgo.ForceReadOnly,
 				}
 				if fieldName == "Power" || fieldName == "Smoke" || fieldName == "Dust" {
@@ -112,8 +124,9 @@ func (a *AstraDetector) handleEvent(e interface{}) {
 				}
 				a.Observer.OnNewControl(a, control)
 				a.fieldsInitialized[fieldName] = true
+			} else {
+				a.Observer.OnValue(a, fieldName, strconv.Itoa(int(f.Uint())))
 			}
-			a.Observer.OnValue(a, fieldName, strconv.Itoa(int(f.Uint())))
 		case astra_l.SensorInfo:
 			// do nothing
 		default:
