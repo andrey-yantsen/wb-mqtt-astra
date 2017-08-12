@@ -28,7 +28,7 @@ deps:
 	  && rm $(GOOS)_$(GOARCH).tar.gz
 
 build:
-	$(GOENV) go build -o wb-mqtt-astra
+	$(GOENV) go build -o wb-mqtt-astra cmd/wb-mqtt-astra/main.go
 
 install:
 	mkdir -p $(DESTDIR)/usr/bin/ $(DESTDIR)/etc/init.d/ $(DESTDIR)/etc/default/

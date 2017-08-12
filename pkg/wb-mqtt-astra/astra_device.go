@@ -1,4 +1,4 @@
-package main
+package wb_mqtt_astra
 
 import (
 	"fmt"
@@ -19,6 +19,7 @@ type AstraDevice struct {
 	modelObserver wbgo.ModelObserver
 	sensors       map[uint16]*AstraDetector
 	model         *AstraModel
+	ready         bool
 }
 
 func (a *AstraDevice) IsVirtual() bool {
@@ -348,6 +349,7 @@ func (a *AstraDevice) Publish() {
 	if _, err := a.device.FindDevice(); err == nil {
 		a.initExistsDevice()
 	}
+	a.ready = true
 }
 
 func (a *AstraDevice) ensureSensor(s astra_l.SensorInfo) *AstraDetector {

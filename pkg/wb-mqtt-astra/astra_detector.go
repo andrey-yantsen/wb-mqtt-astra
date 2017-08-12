@@ -1,4 +1,4 @@
-package main
+package wb_mqtt_astra
 
 import (
 	"reflect"

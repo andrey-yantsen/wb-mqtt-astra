@@ -1,4 +1,4 @@
-package main
+package wb_mqtt_astra
 
 import (
 	"fmt"
@@ -13,7 +13,7 @@ type AstraModel struct {
 	wbgo.ModelBase
 	astra             *astra_l.Driver
 	devices           map[uint16]*AstraDevice
-	addresses         multipleAddress
+	addresses         AddressList
 	started           bool
 	mutex             *sync.Mutex
 	processTestEvents bool
@@ -38,6 +38,7 @@ func (a *AstraModel) Start() error {
 			modelObserver: a.Observer,
 			sensors:       make(map[uint16]*AstraDetector),
 			model:         a,
+			ready:         false,
 		}
 		a.devices[address] = ad
 
@@ -65,6 +66,8 @@ func (a *AstraModel) Poll() {
 		return
 	}
 	for _, dev := range a.devices {
-		dev.Poll()
+		if dev.ready {
+			dev.Poll()
+		}
 	}
 }
