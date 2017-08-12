@@ -1,3 +1,13 @@
+wb-mqtt-astra (0.5.1) wheezy; urgency=low
+
+  * do not reset values to zero on initialization
+  * proper code organization
+  * simplify mutex madness
+  * add default values for EParameterCode
+  * store daemon`s log to /var/log/wb-mqtt-astra.log by default
+
+ -- Andrey Yantsen <andrey@janzen.su>  Sat, 12 Aug 2017 16:42:36 +0300
+
 wb-mqtt-astra (0.5) wheezy; urgency=low
 
   * use `switch` type instead of `alarm`
