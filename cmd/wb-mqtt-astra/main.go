@@ -24,7 +24,7 @@ func main() {
 	if len(addresses) == 0 {
 		panic("You should specify at least one address")
 	}
-	if driver, err := astra_l.Connect(*serial, wbgo.Debug); err != nil {
+	if driver, err := astra_l.Connect(*serial, wbgo.Debug, 50*time.Millisecond); err != nil {
 		panic(err)
 	} else {
 		driver.Start()
