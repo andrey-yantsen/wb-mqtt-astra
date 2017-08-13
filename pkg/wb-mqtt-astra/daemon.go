@@ -33,12 +33,13 @@ func (i *AddressList) Set(value string) error {
 	return nil
 }
 
-func StartDaemon(astra *astra_l.Driver, addresses AddressList, brokerAddress string, processTestEvents bool) {
+func StartDaemon(astra *astra_l.Driver, addresses AddressList, brokerAddress string, processTestEvents bool, sendLastEventOnRIM bool) {
 	model := &AstraModel{
-		astra:             astra,
-		addresses:         addresses,
-		mutex:             &sync.Mutex{},
-		processTestEvents: processTestEvents,
+		astra:              astra,
+		addresses:          addresses,
+		mutex:              &sync.Mutex{},
+		processTestEvents:  processTestEvents,
+		sendLastEventOnRIM: sendLastEventOnRIM,
 	}
 	wDriver := wbgo.NewDriver(model, wbgo.NewPahoMQTTClient(brokerAddress, driverClientId, true))
 	wDriver.SetPollInterval(100 * time.Millisecond)

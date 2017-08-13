@@ -197,7 +197,9 @@ func (a *AstraDevice) Poll() {
 			wbgo.Error.Println("Unable to get events ", err)
 		}
 	} else {
-		a.Observer.OnValue(a, "Last event time", time.Now().Format(time.UnixDate))
+		if a.model.sendLastEventOnRIM {
+			a.Observer.OnValue(a, "Last event time", time.Now().Format(time.UnixDate))
+		}
 		for _, e := range events {
 			wbgo.Info.Printf("Received event %T %+v\n", e, e)
 			switch e := e.(type) {

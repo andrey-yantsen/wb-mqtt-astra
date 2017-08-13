@@ -19,6 +19,7 @@ func main() {
 	debug := flag.Bool("debug", false, "Enable debug output")
 	processTestEvents := flag.Bool("process-test-events", false, "Do not ignore test events emitted by detectors")
 	deleteDevice := flag.Bool("delete-device", false, "Reset registration status of the device with given address")
+	sendLastEventOnRIM := flag.Bool("send-last-event-rim", false, "Send `Last event` date to MQTT for Astra controller")
 	flag.Parse()
 	wbgo.SetDebuggingEnabled(*debug)
 	if len(addresses) == 0 {
@@ -38,7 +39,7 @@ func main() {
 				}
 			}
 		} else {
-			astra.StartDaemon(driver, addresses, *broker, *processTestEvents)
+			astra.StartDaemon(driver, addresses, *broker, *processTestEvents, *sendLastEventOnRIM)
 			for {
 				time.Sleep(1 * time.Second)
 			}

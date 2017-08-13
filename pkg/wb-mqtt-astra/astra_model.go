@@ -11,12 +11,13 @@ import (
 
 type AstraModel struct {
 	wbgo.ModelBase
-	astra             *astra_l.Driver
-	devices           map[uint16]*AstraDevice
-	addresses         AddressList
-	started           bool
-	mutex             *sync.Mutex
-	processTestEvents bool
+	astra              *astra_l.Driver
+	devices            map[uint16]*AstraDevice
+	addresses          AddressList
+	started            bool
+	mutex              *sync.Mutex
+	processTestEvents  bool
+	sendLastEventOnRIM bool
 }
 
 func (a *AstraModel) Start() error {
