@@ -1,3 +1,9 @@
+wb-mqtt-astra (0.5.2) wheezy; urgency=low
+
+  * reduce CPU usage by increasing serial timeout
+
+ -- Andrey Yantsen <andrey@janzen.su>  Sun, 13 Aug 2017 08:59:31 +0300
+
 wb-mqtt-astra (0.5.1) wheezy; urgency=low
 
   * do not reset values to zero on initialization
