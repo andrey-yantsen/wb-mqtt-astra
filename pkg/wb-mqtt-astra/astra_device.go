@@ -348,6 +348,12 @@ func (a *AstraDevice) Publish() {
 		})
 	}
 
+	if a.model.sendLastEventOnRIM {
+		a.Observer.OnNewControl(a, wbgo.Control{
+			Name:   "Last event time",
+		})
+	}
+
 	if _, err := a.device.FindDevice(); err == nil {
 		a.initExistsDevice()
 	}

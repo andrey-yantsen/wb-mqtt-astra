@@ -142,4 +142,7 @@ func (a *AstraDetector) Publish() {
 		Type:  "switch",
 		Value: "0",
 	})
+	a.Observer.OnNewControl(a, wbgo.Control{
+		Name: "Last event time",
+	})
 }
