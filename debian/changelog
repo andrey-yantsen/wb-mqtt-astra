@@ -1,3 +1,10 @@
+wb-mqtt-astra (0.5.4) wheezy; urgency=low
+
+  * publish 1 to /devices/wb_mqtt_astra/status on every connection
+  * make `Last event time` persistent
+
+ -- Andrey Yantsen <andrey@janzen.su>  Tue, 10 Oct 2017 22:28:01 +0300
+
 wb-mqtt-astra (0.5.3) wheezy; urgency=low
 
   * do not send `Last event time` for RIM by default
