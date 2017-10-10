@@ -310,6 +310,8 @@ func (a *AstraDevice) initExistsDevice() {
 }
 
 func (a *AstraDevice) Publish() {
+	a.Observer.OnValue(a, "starting", "1")
+
 	for alias, title := range sharedSwitches {
 		value := "0"
 		a.Observer.OnNewControl(a, wbgo.Control{
@@ -350,7 +352,7 @@ func (a *AstraDevice) Publish() {
 
 	if a.model.sendLastEventOnRIM {
 		a.Observer.OnNewControl(a, wbgo.Control{
-			Name:   "Last event time",
+			Name: "Last event time",
 		})
 	}
 
