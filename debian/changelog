@@ -1,3 +1,9 @@
+wb-mqtt-astra (0.5.5) wheezy; urgency=low
+
+  * one more try for event on start
+
+ -- Andrey Yantsen <andrey@janzen.su>  Wed, 11 Oct 2017 00:00:00 +0300
+
 wb-mqtt-astra (0.5.4) wheezy; urgency=low
 
   * publish 1 to /devices/wb_mqtt_astra/status on every connection
