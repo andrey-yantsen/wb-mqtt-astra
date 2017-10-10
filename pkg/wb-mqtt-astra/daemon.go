@@ -41,7 +41,13 @@ func StartDaemon(astra *astra_l.Driver, addresses AddressList, brokerAddress str
 		processTestEvents:  processTestEvents,
 		sendLastEventOnRIM: sendLastEventOnRIM,
 	}
-	wDriver := wbgo.NewDriver(model, wbgo.NewPahoMQTTClient(brokerAddress, driverClientId, true))
+	mqtt := wbgo.NewPahoMQTTClient(brokerAddress, driverClientId, true)
+	mqtt.Publish(wbgo.MQTTMessage{
+		Topic:   "/devices/wb_mqtt_astra/status",
+		Payload: "1",
+		QoS:     1,
+	})
+	wDriver := wbgo.NewDriver(model, mqtt)
 	wDriver.SetPollInterval(100 * time.Millisecond)
 	if err := wDriver.Start(); err != nil {
 		panic(err)
