@@ -185,8 +185,10 @@ func (a *AstraDevice) AcceptOnValue(name, value string) bool {
 				wbgo.Error.Println("Got error while setting radio mode", err)
 			}
 		}()
+	default:
+		return false
 	}
-	return false
+	return true
 }
 
 func (a *AstraDevice) Poll() {
