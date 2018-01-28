@@ -1,3 +1,9 @@
+wb-mqtt-astra (0.5.7) wheezy; urgency=low
+
+  * add build for amd64
+
+ -- Andrey Yantsen <andrey@janzen.su>  Sun, 28 Jan 2018 16:16:09 +0300
+
 wb-mqtt-astra (0.5.6) wheezy; urgency=low
 
   * publish received value to mqtt topic prior processing
