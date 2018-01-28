@@ -28,7 +28,7 @@ deps:
 	  && rm $(GOOS)_$(GOARCH).tar.gz
 
 build:
-	$(GOENV) go build -o wb-mqtt-astra cmd/wb-mqtt-astra/main.go
+	$(GOENV) go build -ldflags '-w' -o wb-mqtt-astra cmd/wb-mqtt-astra/main.go
 
 install:
 	mkdir -p $(DESTDIR)/usr/bin/ $(DESTDIR)/etc/init.d/ $(DESTDIR)/etc/default/
@@ -54,6 +54,20 @@ release:
 	  mv debian/changelog_tmp debian/changelog &&\
 	  git add debian/changelog && git commit -m "add changelog for release v$${version}" && git push &&\
 	  SSH_AUTH_SOCK= WBDEV_TARGET=$(RELEASE_DEBIAN_TARGET)-armel wbdev gdeb &&\
-	  package_cloud push wb-mqtt-astra/main/debian/$(RELEASE_DEBIAN_TARGET) ../wb-mqtt-astra_$${version}_armel.deb &&\
-	  hub release create -a ../wb-mqtt-astra_$${version}_armel.deb v$$version &&\
+	  $(MAKE) build_amd64_linux &&\
+	  echo dh_auto_configure >debian/wb-mqtt-astra.debhelper.log &&\
+	  echo dh_auto_build >debian/wb-mqtt-astra.debhelper.log &&\
+	  docker run --rm -v `pwd`/..:/deb virus/checkinstall:wheezy bash -c \
+	    "cd /deb/wb-mqtt-astra && fakeroot debian/rules binary" && rm -rf _build && \
+	  package_cloud push wb-mqtt-astra/main/debian/$(RELEASE_DEBIAN_TARGET) \
+	    ../wb-mqtt-astra_$${version}_armel.deb ../wb-mqtt-astra_$${version}_amd64.deb &&\
+	  hub release create -a ../wb-mqtt-astra_$${version}_armel.deb \
+	    -a ../wb-mqtt-astra_$${version}_amd64.deb v$$version &&\
 	  rm ../wb-mqtt-astra_$${version}*
+
+build_amd64_linux:
+	mkdir -p _build/go/src/github.com/andrey-yantsen/ && \
+	  ln -s `pwd` _build/go/src/github.com/andrey-yantsen/wb-mqtt-astra && \
+	  GOPATH=`pwd`/_build/go && go get github.com/contactless/wbgo && \
+	  cd _build/go/src/github.com/andrey-yantsen/wb-mqtt-astra && \
+	  $(MAKE) DEB_TARGET_ARCH=amd64 GOARCH=amd64 GOOS=linux deps build
