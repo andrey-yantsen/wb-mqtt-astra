@@ -140,11 +140,9 @@ mqtt-delete-retained '/devices/astra_1_sensor_1/#'
 invoke-rc.d wb-mqtt-serial stop
 invoke-rc.d wb-mqtt-astra stop
 ```
-5. Запустите демон wb-mqtt-astra в отладочном режиме, с записью лога в файл:
-```bash
-. /etc/default/wb-mqtt-astra && wb-mqtt-astra -debug ${ASTRA_OPTIONS} >astra-debug.log 2>&1
-```
-После того, как в интерфейсе проделаны все действия для повторения проблемы —
+5. Запустите демон wb-mqtt-astra в отладочном режиме, с записью лога в файл: 
+   `. /etc/default/wb-mqtt-astra && wb-mqtt-astra -debug ${ASTRA_OPTIONS} >astra-debug.log 2>&1`.
+   После того, как в интерфейсе проделаны все действия для повторения проблемы —
    завершите процесс нажатием Ctrl+C. Просмотрите получившийся лог-файл
    `astra-debug.log` и убедитесь, что проблема вызвана не ошибкой
    конфигурирования
