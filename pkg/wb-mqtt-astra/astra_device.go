@@ -191,7 +191,7 @@ func (a *AstraDevice) AcceptOnValue(name, value string) bool {
 	return true
 }
 
-func (a *AstraDevice) Poll() {
+func (a *AstraDevice) Poll() bool {
 	a.model.mutex.Lock()
 	defer a.model.mutex.Unlock()
 	if events, err := a.device.GetEvents(); err != nil {
@@ -239,7 +239,9 @@ func (a *AstraDevice) Poll() {
 				wbgo.Error.Printf("Received unexpected event %T %+v\n", e, e)
 			}
 		}
+		return true
 	}
+	return false
 }
 
 var sharedSwitches = map[string]string{
