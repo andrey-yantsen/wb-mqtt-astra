@@ -1,3 +1,9 @@
+wb-mqtt-astra (0.5.9) wheezy; urgency=low
+
+  * remove debug
+
+ -- Andrey Yantsen <andrey@janzen.su>  Sun, 25 Feb 2018 20:48:51 +0300
+
 wb-mqtt-astra (0.5.8) wheezy; urgency=low
 
   * [fix #3] reconnect to serial port after 1 minute of silence
