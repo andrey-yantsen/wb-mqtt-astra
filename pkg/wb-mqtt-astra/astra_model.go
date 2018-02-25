@@ -77,10 +77,7 @@ func (a *AstraModel) Poll() {
 	for _, dev := range a.devices {
 		if dev.ready {
 			if dev.Poll() {
-				wbgo.Error.Println("Got response")
 				a.lastSuccessfulResponse = time.Now()
-			} else {
-				wbgo.Error.Println("No response")
 			}
 		}
 	}
