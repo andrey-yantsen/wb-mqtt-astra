@@ -33,6 +33,21 @@ func (a *AstraDetector) AcceptOnValue(name, value string) bool {
 	return false
 }
 
+func (a *AstraDetector) setFieldValue(fieldName, fieldType, value, units string) {
+	if _, ok := a.fieldsInitialized[fieldName]; !ok {
+		a.Observer.OnNewControl(a, wbgo.Control{
+			Name:        fieldName,
+			Type:        fieldType,
+			Value:       value,
+			Units:	     units,
+			Writability: wbgo.ForceReadOnly,
+		})
+		a.fieldsInitialized[fieldName] = true
+	} else {
+		a.Observer.OnValue(a, fieldName, value)
+	}
+}
+
 func (a *AstraDetector) handleEvent(e interface{}) {
 	wbgo.Debug.Printf("Inspecting %T %+v\n", e, e)
 	v := reflect.ValueOf(e)
@@ -53,80 +68,33 @@ func (a *AstraDetector) handleEvent(e interface{}) {
 				if pc == astra_l.PcFault {
 					value = "1"
 				}
-				if _, ok := a.fieldsInitialized[fieldName]; !ok {
-					a.Observer.OnNewControl(a, wbgo.Control{
-						Name:        fieldName,
-						Type:        "switch",
-						Value:       value,
-						Writability: wbgo.ForceReadOnly,
-					})
-					a.fieldsInitialized[fieldName] = true
-				} else {
-					a.Observer.OnValue(a, fieldName, value)
-				}
+				a.setFieldValue(fieldName, "switch", value, "")
 			case astra_l.PcNormConfirmed, astra_l.PcFaultConfirmed:
 				value := "0"
 				if pc == astra_l.PcFaultConfirmed {
 					value = "1"
 				}
-				if _, ok := a.fieldsInitialized[fieldName+"_confirmed"]; !ok {
-					a.Observer.OnNewControl(a, wbgo.Control{
-						Name:        fieldName + "_confirmed",
-						Type:        "switch",
-						Value:       value,
-						Writability: wbgo.ForceReadOnly,
-					})
-					a.fieldsInitialized[fieldName+"_confirmed"] = true
-				} else {
-					a.Observer.OnValue(a, fieldName+"_confirmed", value)
-				}
+				a.setFieldValue(fieldName+"_confirmed", "switch", value, "")
+				a.setFieldValue(fieldName, "switch", value, "")
 			}
 		case bool:
 			value := "0"
 			if f.Interface().(bool) {
 				value = "1"
 			}
-			if _, ok := a.fieldsInitialized[fieldName]; !ok {
-				a.Observer.OnNewControl(a, wbgo.Control{
-					Name:        fieldName,
-					Type:        "switch",
-					Value:       value,
-					Writability: wbgo.ForceReadOnly,
-				})
-				a.fieldsInitialized[fieldName] = true
-			} else {
-				a.Observer.OnValue(a, fieldName, value)
-			}
+			a.setFieldValue(fieldName, "switch", value, "")
 		case int, int8:
-			if _, ok := a.fieldsInitialized[fieldName]; !ok {
-				control := wbgo.Control{
-					Name:        fieldName,
-					Value:       strconv.Itoa(int(f.Int())),
-					Writability: wbgo.ForceReadOnly,
-				}
-				if fieldName == "Temperature" || fieldName == "Temperature2" {
-					control.Type = "temperature"
-				}
-				a.Observer.OnNewControl(a, control)
-				a.fieldsInitialized[fieldName] = true
-			} else {
-				a.Observer.OnValue(a, fieldName, strconv.Itoa(int(f.Int())))
+			controlType := ""
+			if fieldName == "Temperature" || fieldName == "Temperature2" {
+				controlType = "temperature"
 			}
+			a.setFieldValue(fieldName, controlType, strconv.Itoa(int(f.Int())), "")
 		case uint, uint8:
-			if _, ok := a.fieldsInitialized[fieldName]; !ok {
-				control := wbgo.Control{
-					Name:        fieldName,
-					Value:       strconv.Itoa(int(f.Uint())),
-					Writability: wbgo.ForceReadOnly,
-				}
-				if fieldName == "Power" || fieldName == "Smoke" || fieldName == "Dust" {
-					control.Units = "%"
-				}
-				a.Observer.OnNewControl(a, control)
-				a.fieldsInitialized[fieldName] = true
-			} else {
-				a.Observer.OnValue(a, fieldName, strconv.Itoa(int(f.Uint())))
+			units := ""
+			if fieldName == "Power" || fieldName == "Smoke" || fieldName == "Dust" {
+				units = "%"
 			}
+			a.setFieldValue(fieldName, "", strconv.Itoa(int(f.Uint())), units)
 		case astra_l.SensorInfo:
 			// do nothing
 		default:
